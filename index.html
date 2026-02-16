@@ -30,8 +30,7 @@
             pointer-events: none; z-index: 1; overflow: hidden; display: none;
         }
         .flower {
-            position: absolute; color: #ffb7d5; font-size: 22px;
-            top: -50px;
+            position: absolute; color: #ffb7d5; font-size: 22px; top: -50px;
             animation: fallAndFade linear forwards;
         }
         @keyframes fallAndFade {
@@ -82,25 +81,18 @@
             z-index: 10; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5));
         }
 
-        /* المشهد 2: الدائرة المتوهجة */
-        .glowing-circle {
-            width: 260px; height: 260px; border-radius: 50%;
-            border: 4px solid var(--pink-accent);
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 0 60px var(--pink-glow), inset 0 0 40px var(--pink-glow);
-            z-index: 10; background: rgba(0,0,0,0.2);
-            animation: pulseCircle 2s infinite alternate ease-in-out;
-        }
-        @keyframes pulseCircle { from { transform: scale(0.95); } to { transform: scale(1.05); } }
+        /* --- النجوم --- */
+        .star { position: absolute; background: white; border-radius: 50%; animation: twinkle var(--speed) infinite ease-in-out; }
+        @keyframes twinkle { 0%, 100% { opacity: 0.2; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.2); } }
 
-        /* المشهد 3: باقة الورد الحمراء */
-        .bouquet-img {
+        /* --- المشهد 2 و 3: تأثير الصور النابضة --- */
+        .pulse-img {
             width: 280px;
-            filter: drop-shadow(0 0 30px rgba(255, 0, 0, 0.4));
-            animation: floatBouquet 3s infinite ease-in-out;
+            filter: drop-shadow(0 0 30px var(--pink-glow));
+            animation: floatAndPulse 3s infinite ease-in-out;
             z-index: 10;
         }
-        @keyframes floatBouquet {
+        @keyframes floatAndPulse {
             0%, 100% { transform: translateY(0) scale(1); }
             50% { transform: translateY(-20px) scale(1.05); }
         }
@@ -113,10 +105,7 @@
             width: 12px; background: linear-gradient(to top, var(--pink-accent), var(--gold));
             border-radius: 6px; animation: wave 0.6s infinite alternate ease-in-out;
         }
-        @keyframes wave {
-            from { height: 20px; opacity: 0.5; }
-            to { height: 120px; opacity: 1; }
-        }
+        @keyframes wave { from { height: 20px; opacity: 0.5; } to { height: 120px; opacity: 1; } }
 
         #start-overlay {
             position: fixed; top:0; left:0; width:100%; height:100%; background: var(--bg-dark);
@@ -157,19 +146,20 @@
     </section>
 
     <section id="scene2">
-        <div class="glowing-circle">
-            <div class="big-name-text" id="sceneName2" style="font-size: 42px;"></div>
-        </div>
-        <h2 style="font-family: 'Aref Ruqaa'; margin-top: 35px; z-index: 10;">بيحس بأمان معاك</h2>
+        <div class="stars-container" id="stars-scene2"></div>
+        <img src="https://i.ibb.co/MkGDmtYC/1000013072-removebg-preview.png" alt="صورة خاصة" class="pulse-img">
+        <div class="big-name-text" id="sceneName2" style="font-size: 42px; margin-top: 20px;"></div>
+        <h2 style="font-family: 'Aref Ruqaa'; margin-top: 10px; z-index: 10;">بيحس بأمان معاك</h2>
     </section>
 
     <section id="scene3">
-        <img src="https://i.ibb.co/tpp5Q7jS/1000013068-removebg-preview-1.png" alt="باقة ورد" class="bouquet-img">
+        <img src="https://i.ibb.co/LzN8M9S/red-roses-bouquet.png" alt="باقة ورد" class="pulse-img">
         <div class="big-name-text" id="sceneName3" style="font-size: 45px; margin-top: 20px;"></div>
         <h2 style="font-family: 'Aref Ruqaa'; color: var(--gold);">باقة حب لروحك</h2>
     </section>
 
     <section id="scene4">
+        <div class="stars-container" id="stars-scene4"></div>
         <div class="visualizer" id="viz"></div>
         <div class="big-name-text" id="sceneName4" style="font-size: 40px;"></div>
         <p style="font-family: 'Aref Ruqaa'; font-size: 22px;">أنت اللحن الذي يراقص قلبي</p>
@@ -189,6 +179,20 @@
 <script>
     const songUrl = "https://f.top4top.io/m_3699yquuk0.mp3";
     let flowerInterval;
+
+    function createStars(containerId) {
+        const container = document.getElementById(containerId);
+        for(let i=0; i<40; i++) {
+            const s = document.createElement('div');
+            s.className = 'star';
+            const size = (Math.random() * 2 + 1) + 'px';
+            s.style.width = size; s.style.height = size;
+            s.style.top = Math.random() * 100 + '%';
+            s.style.left = Math.random() * 100 + '%';
+            s.style.setProperty('--speed', (Math.random() * 3 + 2) + 's');
+            container.appendChild(s);
+        }
+    }
 
     function generateLink() {
         const name = document.getElementById('nameInput').value;
@@ -217,7 +221,9 @@
             document.getElementById('sceneName3').innerText = name;
             document.getElementById('sceneName4').innerText = name;
 
-            // بناء الموسيقى
+            createStars('stars-scene2');
+            createStars('stars-scene4');
+
             const viz = document.getElementById('viz');
             for(let i=0; i<12; i++) {
                 const bar = document.createElement('div');
