@@ -3,15 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>غنيلي - خليك معايا</title>
+    <title>غنيلي - تجربة سينمائية</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Cairo:wght@400;700&family=Reem+Kufi:wght@500&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --bg-dark: #0a0b10;
+            --bg-dark: #05060a;
             --pink-accent: #f83292;
+            --pink-glow: rgba(248, 50, 146, 0.5);
             --gold: #ffcc00;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
         }
 
         body, html {
@@ -21,135 +24,200 @@
             margin: 0; padding: 0;
             overflow: hidden;
             height: 100%;
+            cursor: crosshair;
         }
 
-        /* واجهة العرض - التمرير السلس */
+        /* الخلفية المتحركة الكونية */
+        .animated-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, #1a1b26 0%, #05060a 100%);
+            z-index: -2;
+        }
+
+        .bg-orb {
+            position: absolute; width: 400px; height: 400px;
+            background: var(--pink-glow); filter: blur(120px);
+            border-radius: 50%; opacity: 0.3;
+            animation: moveOrb 15s infinite alternate ease-in-out;
+        }
+
+        @keyframes moveOrb {
+            0% { transform: translate(-10%, -10%); }
+            100% { transform: translate(50%, 40%); }
+        }
+
+        /* حاوية صانع الإهداء - تصميم الزجاج */
+        .maker-layout {
+            max-width: 420px; margin: auto; padding: 20px;
+            display: flex; flex-direction: column; justify-content: center; min-height: 100vh;
+            position: relative; z-index: 10;
+        }
+
+        .step-card {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 35px; padding: 40px 25px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+
+        .song-option {
+            background: rgba(255,255,255,0.03); border-radius: 20px; padding: 15px;
+            display: flex; align-items: center; margin-bottom: 15px;
+            cursor: pointer; border: 1px solid var(--glass-border); transition: 0.4s;
+        }
+        .song-option.selected { 
+            border-color: var(--pink-accent); 
+            background: rgba(248, 50, 146, 0.15);
+            transform: scale(1.02);
+        }
+
+        .main-input {
+            width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--pink-accent);
+            border-radius: 15px; padding: 15px; color: white;
+            font-family: 'Cairo'; font-size: 18px; text-align: center; margin-bottom: 15px; box-sizing: border-box;
+        }
+
+        .btn-action {
+            width: 100%; border: none; padding: 18px; border-radius: 50px;
+            color: white; font-size: 18px; font-weight: bold;
+            background: linear-gradient(45deg, #9133a8, #f83292); cursor: pointer;
+            box-shadow: 0 10px 20px var(--pink-glow); transition: 0.3s;
+        }
+        .btn-action:hover { transform: translateY(-3px); box-shadow: 0 15px 25px var(--pink-accent); }
+
+        /* واجهة العرض السينمائية */
         #view-screen { 
             display: none; height: 100vh; width: 100%; 
-            overflow-y: scroll; scroll-snap-type: y mandatory;
-            scrollbar-width: none;
+            overflow-y: scroll; scroll-snap-type: y mandatory; 
+            scrollbar-width: none; position: relative;
         }
+        #view-screen::-webkit-scrollbar { display: none; }
 
         section {
             height: 100vh; width: 100%; position: relative;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            scroll-snap-align: start; text-align: center;
+            scroll-snap-align: start; text-align: center; overflow: hidden;
+            perspective: 1000px;
         }
 
-        /* ألوان الخلفيات من الصورة */
-        section:nth-child(1) { background: radial-gradient(circle, #2a1b3d 0%, #0f0a1a 100%); } /* بنفسجي */
-        section:nth-child(2) { background: linear-gradient(180deg, #b8d2e9 0%, #8ba9c9 100%); } /* أزرق فاتح */
-        section:nth-child(3) { background: linear-gradient(180deg, #9bb8d9 0%, #7292b8 100%); } /* أزرق متوسط */
-        section:nth-child(4) { background: radial-gradient(circle, #3d1a4a 0%, #12081a 100%); } /* أرجواني */
-        section:nth-child(5) { background: linear-gradient(180deg, #1e3a5f 0%, #0a1424 100%); } /* كحلي */
+        /* تأثيرات الظهور للمشاهد */
+        section > * { opacity: 0; transform: translateY(50px) scale(0.9); transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1); }
+        section.active-scene > * { opacity: 1; transform: translateY(0) scale(1); }
 
-        /* النجمة (المشهد الأول) */
-        .star-shape {
-            width: 150px; height: 150px;
-            background: none; border: 2px solid rgba(255,255,255,0.8);
-            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+        .big-name-text {
+            font-family: 'Aref Ruqaa', serif; font-size: 70px;
+            background: linear-gradient(to bottom, #fff, var(--pink-accent));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 20px var(--pink-glow));
+        }
+
+        /* الساعة المطورة */
+        .pro-clock {
+            width: 260px; height: 260px; border: 8px solid var(--glass-border); border-radius: 50%;
+            position: relative; background: rgba(255,255,255,0.02);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
             display: flex; align-items: center; justify-content: center;
-            margin-bottom: 20px;
         }
 
-        /* الكبسولة (المشهد الثاني) */
-        .white-pill {
-            background: white; color: #555;
-            padding: 10px 45px; border-radius: 50px;
-            font-size: 22px; font-weight: bold;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        /* القلوب العائمة */
+        .floating-heart {
+            position: absolute; font-size: 24px; pointer-events: none;
+            animation: fly 6s linear infinite; opacity: 0;
+        }
+        @keyframes fly {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            20% { opacity: 0.6; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
         }
 
-        /* المخطط الصوتي (المشهد الرابع) */
-        .v-bars { display: flex; align-items: center; gap: 4px; height: 50px; margin-bottom: 20px;}
-        .v-bar { width: 5px; background: white; border-radius: 10px; animation: scaleY 0.6s infinite alternate; }
-        @keyframes scaleY { from { height: 10px; } to { height: 40px; } }
-
-        /* المستطيل النهائي */
-        .final-box {
-            border: 1px solid rgba(255,255,255,0.3);
-            border-radius: 20px; padding: 40px;
-            width: 70%; background: rgba(255,255,255,0.05);
+        #start-overlay {
+            position: fixed; top:0; left:0; width:100%; height:100%; 
+            background: var(--bg-dark); z-index: 1000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
-
 
     </style>
 </head>
 <body>
 
+<div class="animated-bg"><div class="bg-orb"></div></div>
+
 <div class="maker-layout" id="maker-ui">
     <div class="step-card">
-        <h2 style="text-align: center; color: var(--gold); font-family: 'Aref Ruqaa';">غنيلي 🎵</h2>
+        <h2 style="color: var(--gold); font-family: 'Aref Ruqaa'; font-size: 35px; margin-bottom: 20px;">غنيلي 🎵</h2>
         
         <div id="setup-step">
             <div class="song-option" id="default-song" onclick="selectSong(this, 'خليك معايا', 'https://j.top4top.io/m_369843dq30.mp3')">
-                <img src="https://i.ibb.co/VWV0pY6/amr.jpg" class="song-img">
-                <div style="text-align: right;"><strong>خليك معايا</strong><br><small>عمرو دياب</small></div>
+                <img src="https://i.ibb.co/VWV0pY6/amr.jpg" style="width: 60px; border-radius: 15px; margin-left: 15px;">
+                <div style="text-align: right;"><strong>خليك معايا</strong><br><small style="color: #aaa;">عمرو دياب</small></div>
             </div>
-            <div id="name-box" style="display: none; margin-top: 20px;">
-                <input type="text" id="nameInput" class="main-input" placeholder="اسم المستلم">
-                <button class="btn-action" onclick="generateLink()">إنشاء الرابط ✨</button>
+            
+            <div id="name-box" style="display: none; margin-top: 25px;">
+                <input type="text" id="nameInput" class="main-input" placeholder="اسم أغلى الناس...">
+                <button class="btn-action" onclick="generateLink()">إنشاء تجربة سحرية ✨</button>
             </div>
         </div>
 
-        <div id="result-step" style="display: none; text-align: center;">
-            <p>جاهز للإرسال!</p>
-            <div id="linkOutput" style="background:#000; padding:15px; border-radius:10px; font-size:10px; word-break:break-all; border:1px solid var(--pink-accent); margin-bottom: 15px;"></div>
-            <button class="btn-action" onclick="copyLink()">نسخ الرابط 📋</button>
+        <div id="result-step" style="display: none;">
+            <p style="color: var(--pink-accent);">تم تجهيز الهدية بنجاح!</p>
+            <div id="linkOutput" style="background:rgba(0,0,0,0.4); padding:15px; border-radius:15px; font-size:11px; margin-bottom: 20px; border: 1px dashed var(--pink-accent);"></div>
+            <button class="btn-action" onclick="copyLink()">نسخ رابط الإهداء 📋</button>
         </div>
     </div>
 </div>
 
 <div id="start-overlay" style="display: none;">
-    <div style="font-size: 80px;">💖</div>
-    <h2 id="greetName" style="font-family: 'Aref Ruqaa';"></h2>
-    <button class="btn-action" style="width: 200px;" onclick="initExperience()">ابدأ الاغنية 🎵</button>
+    <div class="step-card" style="width: 280px;">
+        <div style="font-size: 60px; margin-bottom: 10px;">🎁</div>
+        <h2 id="greetName" style="font-family: 'Aref Ruqaa'; color: var(--gold);"></h2>
+        <p style="font-size: 14px; opacity: 0.8;">لديك إهداء خاص جداً...</p>
+        <button class="btn-action" onclick="initExperience()">فتح الإهداء 🎵</button>
+    </div>
 </div>
 
 <div id="view-screen">
+    <section class="active-scene">
+        <div class="big-name-text" id="finalName"></div>
+        <p style="color: var(--gold); font-family: 'Aref Ruqaa'; font-size: 28px; margin-top: 15px;">يا حلم عمري...</p>
+    </section>
+
     <section>
-        <div class="star-shape"></div>
-        <h2 id="finalName" style="font-size: 40px; font-weight: 300;">big name text</h2>
-        <p style="opacity: 0.7;">"final Name-1"</p>
+        <div style="background: var(--glass); padding: 40px; border-radius: 50%; border: 1px solid var(--pink-accent); box-shadow: 0 0 50px var(--pink-glow);">
+            <div class="big-name-text" id="sceneName" style="font-size: 50px;"></div>
+        </div>
+        <h2 style="font-family: 'Aref Ruqaa'; font-size: 35px; margin-top: 30px;">بيحس بأمان معاك</h2>
+    </section>
+
+    <section>
+        <div class="pro-clock">
+            <div class="hand hour" style="width: 6px; height: 60px; background: var(--pink-accent); position: absolute; bottom: 50%; transform-origin: bottom; animation: rotateHand 20s linear infinite;"></div>
+            <div class="hand min" style="width: 4px; height: 90px; background: var(--gold); position: absolute; bottom: 50%; transform-origin: bottom; animation: rotateHand 5s linear infinite;"></div>
+            <div style="z-index: 10; color: white; font-family: 'Reem Kufi';">الزمن يتوقف هنا</div>
+        </div>
+        <h2 style="font-family: 'Aref Ruqaa'; font-size: 32px; margin-top: 40px; color: var(--pink-accent);">خليك معايا...✨</h2>
     </section>
 
     <section>
         <div style="position: relative;">
-            <div style="position: absolute; top:-30px; left:-20px; font-size:30px;">🫧</div>
-            <div class="white-pill" id="sceneName">Final Name</div>
-            <div style="position: absolute; bottom:-20px; right:-20px; font-size:20px; color:gold;">⭐</div>
+            <div style="font-size: 120px; filter: drop-shadow(0 0 30px var(--pink-accent));">🫂</div>
         </div>
-        <p style="margin-top: 40px; color: #444;">"وا آهار لتحطام في"</p>
+        <h2 style="font-family: 'Aref Ruqaa'; font-size: 35px; margin-top: 40px; padding: 0 20px;">مهما كان البعد.. مكانك في القلب</h2>
     </section>
 
     <section>
-        <div style="width:160px; height:160px; border: 3px solid #fff; border-radius:50%; overflow:hidden; box-shadow: 0 0 20px rgba(255,255,255,0.4);">
-             <img src="https://via.placeholder.com/160" style="width:100%; height:100%; object-fit:cover;">
-        </div>
-        <p style="margin-top: 25px;">"من الي فعيل 36 حبيبي السدن"</p>
-    </section>
-
-    <section>
-        <div class="v-bars">
-            <div class="v-bar" style="animation-delay: 0.1s"></div>
-            <div class="v-bar" style="height:50px; animation-delay: 0.3s"></div>
-            <div class="v-bar" style="animation-delay: 0.2s"></div>
-            <div class="v-bar" style="height:60px; animation-delay: 0.4s"></div>
-            <div class="v-bar" style="animation-delay: 0.5s"></div>
-        </div>
-        <p>النقل 30% ✨</p>
-    </section>
-
-    <section>
-        <div class="final-box">
-            <p style="color: var(--gold); font-size: 14px;">Thank you text-2</p>
-            <h2 style="font-size: 45px; margin: 10px 0;">قم الحيرد</h2>
-            <p style="opacity: 0.6; font-size: 12px;">فايلي اله bhil</p>
+        <div class="step-card" style="max-width: 320px;">
+            <div style="font-size: 40px;">💖</div>
+            <h2 class="big-name-text" style="font-size: 40px;">يا حلم عمري</h2>
+            <p style="line-height: 1.8; font-size: 17px;">"أنتِ الحكاية التي لا أريد لها نهاية."</p>
+            <div style="margin-top: 20px; border-top: 1px solid var(--glass-border); pt-15px; font-size: 12px; color: var(--pink-accent);">
+                صُنع بكل حُب بواسطة <br> <b>عبدو غرلي</b>
+            </div>
         </div>
     </section>
 </div>
-
-
 
 <audio id="player" loop></audio>
 
@@ -166,7 +234,7 @@
     function generateLink() {
         const name = document.getElementById('nameInput').value;
         if (!name) return alert("اكتب الاسم أولاً");
-        const link = window.location.origin + window.location.pathname + "?to=" + encodeURIComponent(name) + "&m=" + encodeURIComponent(songUrl);
+        const link = window.location.href.split('?')[0] + "?to=" + encodeURIComponent(name);
         document.getElementById('setup-step').style.display = 'none';
         document.getElementById('result-step').style.display = 'block';
         document.getElementById('linkOutput').innerText = link;
@@ -174,7 +242,18 @@
 
     function copyLink() {
         navigator.clipboard.writeText(document.getElementById('linkOutput').innerText);
-        alert("تم نسخ الرابط!");
+        alert("تم نسخ الرابط! أرسله لمن تحب 💖");
+    }
+
+    // تأثير القلوب العائمة
+    function createHeart() {
+        const heart = document.createElement('div');
+        heart.className = 'floating-heart';
+        heart.innerHTML = ['💖','✨','🌸','💗','❤️'][Math.floor(Math.random()*5)];
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 6000);
     }
 
     window.onload = function() {
@@ -183,66 +262,54 @@
             const name = decodeURIComponent(params.get('to'));
             document.getElementById('maker-ui').style.display = 'none';
             document.getElementById('start-overlay').style.display = 'flex';
-            document.getElementById('view-screen').style.display = 'block';
             document.getElementById('greetName').innerText = "إلى " + name;
             document.getElementById('finalName').innerText = name;
             document.getElementById('sceneName').innerText = name;
-            songUrl = decodeURIComponent(params.get('m')) || "https://j.top4top.io/m_369843dq30.mp3";
-            
-            const box = document.getElementById('stars-box');
-            for(let i=0; i<40; i++) {
-                let s = document.createElement('div');
-                s.className = 'star';
-                s.style.top = Math.random()*100+'%';
-                s.style.left = Math.random()*100+'%';
-                box.appendChild(s);
-            }
+            songUrl = "https://j.top4top.io/m_369843dq30.mp3";
+            setInterval(createHeart, 400);
         }
     };
 
     function initExperience() {
-        document.getElementById('start-overlay').style.display = 'none';
-        const audio = document.getElementById('player');
-        audio.src = songUrl;
-        audio.play();
-
-        startAutoScroll(); // استدعاء دالة التمرير الذكية هنا
+        document.getElementById('start-overlay').style.fadeOut = "slow";
+        setTimeout(() => {
+            document.getElementById('start-overlay').style.display = 'none';
+            document.getElementById('view-screen').style.display = 'block';
+            const audio = document.getElementById('player');
+            audio.src = songUrl;
+            audio.play();
+            startAutoScroll();
+        }, 500);
     }
 
-
-        let current = 0;
-        const sections = document.querySelectorAll('section');
     function startAutoScroll() {
-        let current = 0;
         const sections = document.querySelectorAll('section');
-        const viewScreen = document.getElementById('view-screen');
-
-        function scrollNext() {
-            current = (current + 1) % sections.length;
-            
-            viewScreen.scrollTo({
-                top: current * window.innerHeight,
-                behavior: 'smooth'
+        let current = 0;
+        
+        // استخدام Intersection Observer لمراقبة المشهد النشط
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) entry.target.classList.add('active-scene');
+                else entry.target.classList.remove('active-scene');
             });
+        }, { threshold: 0.5 });
 
-            // تحديد وقت الانتظار بناءً على المشهد
-            // إذا كان المشهد الحالي هو الأخير (الخاتمة)
-            let waitTime;
-            if (current === sections.length - 1) {
-                waitTime = 12000; // وقت طويل للخاتمة (12 ثانية مثلاً) قبل العودة للبداية
-            } else if (current === 0) {
-                waitTime = 6000; // وقت المشهد الأول بعد العودة
-            } else {
-                waitTime = 6000; // وقت باقي الانتقالات العادية
-            }
+        sections.forEach(s => observer.observe(s));
 
-            setTimeout(scrollNext, waitTime);
-        }
-
-        // ابدأ أول انتقال بعد 6 ثوانٍ من التشغيل
-        setTimeout(scrollNext, 6000);
+        // التمرير التلقائي الاحترافي
+        setInterval(() => {
+            current = (current + 1) % sections.length;
+            sections[current].scrollIntoView({ behavior: 'smooth' });
+        }, 7000);
     }
-
 </script>
+
+<style>
+    @keyframes rotateHand {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+</style>
+
 </body>
 </html>
