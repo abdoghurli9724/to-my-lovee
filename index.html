@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>غنيلي - تجربة سحرية</title>
+    <title>غنيلي - تجربة سينمائية</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     
@@ -24,18 +24,22 @@
             height: 100%;
         }
 
-        /* --- المشهد 1: الورود المتحركة --- */
-        .flower-container {
+        /* --- المشهد 1: الورود (تحسين الانسيابية) --- */
+        #flowerContainer {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 1; display: none;
+            pointer-events: none; z-index: 1; overflow: hidden; display: none;
         }
         .flower {
-            position: absolute; color: #ffb7d5; font-size: 20px;
-            animation: fall linear infinite;
+            position: absolute; color: #ffb7d5; font-size: 22px;
+            top: -50px; /* تولد خارج الشاشة */
+            animation: fallAndFade linear forwards;
+            filter: drop-shadow(0 0 5px rgba(255,183,213,0.5));
         }
-        @keyframes fall {
-            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+        @keyframes fallAndFade {
+            0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.8; } /* تظهر تدريجياً */
+            90% { opacity: 0.8; }
+            100% { transform: translateY(110vh) translateX(50px) rotate(360deg); opacity: 0; }
         }
 
         /* واجهة الصانع */
@@ -45,19 +49,21 @@
             position: relative; z-index: 100;
         }
         .step-card {
-            background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px);
+            background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px);
             border: 1px solid rgba(255,255,255,0.1); border-radius: 35px;
             padding: 40px 25px; text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
         }
         .main-input {
             width: 100%; background: rgba(0,0,0,0.4); border: 2px solid var(--pink-accent);
             border-radius: 15px; padding: 15px; color: white; font-size: 18px;
-            text-align: center; margin: 20px 0; outline: none;
+            text-align: center; margin: 20px 0; outline: none; transition: 0.3s;
         }
         .btn-action {
             width: 100%; border: none; padding: 18px; border-radius: 50px;
             color: white; font-size: 18px; font-weight: bold;
             background: linear-gradient(45deg, #9133a8, #f83292); cursor: pointer;
+            box-shadow: 0 5px 15px var(--pink-glow);
         }
 
         /* العرض السينمائي */
@@ -77,64 +83,68 @@
             font-family: 'Aref Ruqaa', serif; font-size: 65px;
             background: linear-gradient(to bottom, #fff, var(--pink-accent));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            z-index: 10;
+            z-index: 10; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5));
         }
 
         /* --- المشهد 2: التوهج السحري --- */
         .magic-bg-glow {
             position: absolute; width: 100%; height: 100%;
-            background: radial-gradient(circle, rgba(248, 50, 146, 0.2) 0%, transparent 70%);
-            animation: pulseGlow 3s infinite alternate;
+            background: radial-gradient(circle, rgba(248, 50, 146, 0.25) 0%, transparent 75%);
+            animation: pulseGlow 3s infinite alternate ease-in-out;
             z-index: 1;
         }
         .glowing-circle {
-            width: 250px; height: 250px; border-radius: 50%;
-            border: 3px solid var(--pink-accent);
+            width: 260px; height: 260px; border-radius: 50%;
+            border: 4px solid var(--pink-accent);
             display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 0 50px var(--pink-glow); z-index: 10;
+            box-shadow: 0 0 60px var(--pink-glow), inset 0 0 40px var(--pink-glow);
+            z-index: 10; background: rgba(0,0,0,0.2);
         }
         @keyframes pulseGlow {
-            0% { opacity: 0.4; transform: scale(0.9); }
+            0% { opacity: 0.3; transform: scale(0.85); }
             100% { opacity: 1; transform: scale(1.1); }
         }
 
-        /* --- المشهد 3: القمر الحقيقي والنبض --- */
+        /* --- المشهد 3: القمر والاسم النابض --- */
         .pulse-name-bg {
-            position: absolute; font-family: 'Aref Ruqaa'; font-size: 12vw;
-            color: rgba(248, 50, 146, 0.05); white-space: nowrap;
-            animation: textPulse 2s infinite; z-index: 1;
+            position: absolute; font-family: 'Aref Ruqaa'; font-size: 15vw;
+            color: rgba(248, 50, 146, 0.08); white-space: nowrap;
+            animation: textPulse 2.5s infinite ease-in-out; z-index: 1;
         }
-        @keyframes textPulse { 0%, 100% { transform: scale(1); opacity: 0.05; } 50% { transform: scale(1.1); opacity: 0.1; } }
+        @keyframes textPulse { 0%, 100% { transform: scale(1); opacity: 0.04; } 50% { transform: scale(1.15); opacity: 0.12; } }
 
         .moon-real {
-            position: relative; width: 220px; height: 220px;
-            background: radial-gradient(circle at 30% 30%, #ffffff, #888888);
-            border-radius: 50%; box-shadow: 0 0 80px rgba(255,255,255,0.3);
+            position: relative; width: 230px; height: 230px;
+            background: radial-gradient(circle at 35% 35%, #ffffff, #999, #444);
+            border-radius: 50%; box-shadow: 0 0 100px rgba(255,255,255,0.25);
             display: flex; align-items: center; justify-content: center; z-index: 10;
+            border: 1px solid rgba(255,255,255,0.1);
         }
-        /* ثقوب القمر */
-        .crater { position: absolute; background: rgba(0,0,0,0.15); border-radius: 50%; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.3); }
-        .c1 { width: 30px; height: 30px; top: 20%; left: 30%; }
-        .c2 { width: 15px; height: 15px; bottom: 25%; right: 20%; }
-        .c3 { width: 20px; height: 20px; top: 50%; right: 15%; }
+        .crater { position: absolute; background: rgba(0,0,0,0.18); border-radius: 50%; box-shadow: inset 3px 3px 6px rgba(0,0,0,0.4); }
+        .c1 { width: 35px; height: 35px; top: 22%; left: 28%; }
+        .c2 { width: 18px; height: 18px; bottom: 28%; right: 25%; }
+        .c3 { width: 25px; height: 25px; top: 48%; right: 18%; }
 
         .name-on-moon {
-            font-family: 'Aref Ruqaa'; font-size: 24px; color: #333;
-            text-shadow: 1px 1px 2px rgba(255,255,255,0.5); transform: rotate(-5deg);
+            font-family: 'Aref Ruqaa'; font-size: 26px; color: #222;
+            text-shadow: 1px 1px 1px rgba(255,255,255,0.6); transform: rotate(-4deg);
+            font-weight: bold;
         }
 
         /* --- المشهد 4: النجوم والشهب --- */
-        .star { position: absolute; background: white; border-radius: 50%; animation: twinkle var(--speed) infinite; }
-        @keyframes twinkle { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+        .star { position: absolute; background: white; border-radius: 50%; animation: twinkle var(--speed) infinite ease-in-out; }
+        @keyframes twinkle { 0%, 100% { opacity: 0.2; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.2); } }
+        
         .shooting-star {
-            position: absolute; top: 0; left: 0; width: 2px; height: 2px;
-            background: white; box-shadow: 0 0 10px white;
-            animation: shoot 4s linear infinite;
+            position: absolute; top: -5%; left: -5%; width: 2px; height: 2px;
+            background: white; box-shadow: 0 0 15px 2px white;
+            animation: shoot 5s linear infinite;
         }
         @keyframes shoot {
-            0% { transform: translate(-10vw, -10vh) rotate(45deg); opacity: 1; }
-            20% { transform: translate(110vw, 110vh) rotate(45deg); opacity: 0; }
-            100% { transform: translate(110vw, 110vh); opacity: 0; }
+            0% { transform: translate(0, 0) rotate(40deg); opacity: 0; }
+            10% { opacity: 1; }
+            30% { transform: translate(110vw, 100vh) rotate(40deg); opacity: 0; }
+            100% { opacity: 0; }
         }
 
         #start-overlay {
@@ -145,42 +155,42 @@
 </head>
 <body>
 
-<div class="flower-container" id="flowerContainer"></div>
+<div id="flowerContainer"></div>
 
 <div class="maker-layout" id="maker-ui">
     <div class="step-card">
-        <h2 style="font-family: 'Aref Ruqaa'; color: var(--gold);">غنيلي 🎵</h2>
+        <h2 style="font-family: 'Aref Ruqaa'; color: var(--gold); font-size: 32px;">غنيلي 🎵</h2>
         <div id="setup-step">
-            <input type="text" id="nameInput" class="main-input" placeholder="اسم من تحب...">
-            <button class="btn-action" onclick="generateLink()">بدء السحر ✨</button>
+            <input type="text" id="nameInput" class="main-input" placeholder="اسم أغلى الناس...">
+            <button class="btn-action" onclick="generateLink()">إنشاء الرابط السحري ✨</button>
         </div>
         <div id="result-step" style="display: none;">
-            <p>تم إنشاء رابط الإهداء</p>
-            <div id="linkOutput" style="background:rgba(0,0,0,0.3); padding:10px; border-radius:10px; font-size:10px; margin-bottom: 15px; border:1px solid var(--pink-accent);"></div>
-            <button class="btn-action" onclick="copyLink()">نسخ الرابط 📋</button>
+            <p>جاهز للإرسال 💖</p>
+            <div id="linkOutput" style="background:rgba(0,0,0,0.3); padding:12px; border-radius:15px; font-size:11px; margin-bottom: 20px; border:1px solid var(--pink-accent); word-break: break-all;"></div>
+            <button class="btn-action" onclick="copyLink()">نسخ 📋</button>
         </div>
     </div>
 </div>
 
 <div id="start-overlay" style="display: none;">
-    <div class="step-card" style="width: 280px;">
-        <h2 id="greetName" style="font-family: 'Aref Ruqaa';"></h2>
-        <button class="btn-action" onclick="initExperience()">فتح الرسالة 🎵</button>
+    <div class="step-card" style="width: 290px;">
+        <h2 id="greetName" style="font-family: 'Aref Ruqaa'; margin-bottom: 25px;"></h2>
+        <button class="btn-action" onclick="initExperience()">فتح الإهداء 🎵</button>
     </div>
 </div>
 
 <div id="view-screen">
     <section id="scene1">
         <div class="big-name-text" id="finalName"></div>
-        <p style="color: var(--gold); font-family: 'Aref Ruqaa'; font-size: 25px;">أجمل ما حدث لي..</p>
+        <p style="color: var(--gold); font-family: 'Aref Ruqaa'; font-size: 28px; margin-top: 10px;">يا حلم عمري...</p>
     </section>
 
     <section id="scene2">
         <div class="magic-bg-glow"></div>
         <div class="glowing-circle">
-            <div class="big-name-text" id="sceneName2" style="font-size: 40px;"></div>
+            <div class="big-name-text" id="sceneName2" style="font-size: 42px;"></div>
         </div>
-        <h2 style="font-family: 'Aref Ruqaa'; margin-top: 30px; z-index: 10;">بيحس بأمان معاك</h2>
+        <h2 style="font-family: 'Aref Ruqaa'; margin-top: 35px; z-index: 10;">بيحس بأمان معاك</h2>
     </section>
 
     <section id="scene3">
@@ -191,18 +201,18 @@
             <div class="crater c3"></div>
             <div class="name-on-moon" id="moonName"></div>
         </div>
-        <h2 style="font-family: 'Aref Ruqaa'; margin-top: 40px; font-size: 28px;">يا قمري في عتمة الليل..</h2>
+        <h2 style="font-family: 'Aref Ruqaa'; margin-top: 45px; font-size: 30px;">يا قمري في عتمة الليل.. ✨</h2>
     </section>
 
     <section id="scene4">
         <div id="stars-box"></div>
         <div class="shooting-star"></div>
-        <div style="z-index: 10;">
-            <h2 class="big-name-text" style="font-size: 45px;">خليك معايا</h2>
-            <p style="font-family: 'Cairo'; font-size: 18px; color: #eee;">"أنت النجمة التي تضيء عالمي"</p>
-            <div style="margin-top: 40px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 20px;">
-                <small>بكل حب بواسطة</small><br>
-                <strong style="color: var(--pink-accent); font-size: 22px;">عـبـدو غـرلي</strong>
+        <div style="z-index: 10; padding: 20px;">
+            <h2 class="big-name-text" style="font-size: 50px;">خليك معايا</h2>
+            <p style="font-family: 'Cairo'; font-size: 19px; color: #eee; margin-top: 15px;">"أنت النجمة التي تضيء عالمي"</p>
+            <div style="margin-top: 50px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 25px;">
+                <small style="opacity: 0.7;">بكل حب بواسطة</small><br>
+                <strong style="color: var(--pink-accent); font-size: 24px; text-shadow: 0 0 10px var(--pink-glow);">عـبـدو غـرلي</strong>
             </div>
         </div>
     </section>
@@ -213,29 +223,36 @@
 <script>
     const songUrl = "https://j.top4top.io/m_369843dq30.mp3";
 
-    function createFlowers() {
+    // تحسين الورود: توليد مستمر بدلاً من دفعة واحدة ثابته
+    let flowerInterval;
+    function startFlowerRain() {
         const container = document.getElementById('flowerContainer');
-        for(let i=0; i<30; i++) {
+        container.style.display = 'block';
+        flowerInterval = setInterval(() => {
             const f = document.createElement('div');
             f.className = 'flower';
-            f.innerHTML = ['🌸', '🌹'][Math.floor(Math.random()*2)];
+            f.innerHTML = ['🌸', '🌹', '🌺'][Math.floor(Math.random()*3)];
             f.style.left = Math.random() * 100 + 'vw';
-            f.style.animationDuration = (Math.random() * 3 + 4) + 's';
-            f.style.animationDelay = Math.random() * 5 + 's';
+            // سرعات عشوائية
+            const duration = Math.random() * 3 + 5;
+            f.style.animationDuration = duration + 's';
             container.appendChild(f);
-        }
+            
+            // حذف الوردة بعد انتهاء الحركة
+            setTimeout(() => f.remove(), duration * 1000);
+        }, 400); // توليد وردة كل 400 ملي ثانية
     }
 
     function createStars() {
         const box = document.getElementById('stars-box');
-        for(let i=0; i<80; i++) {
+        for(let i=0; i<90; i++) {
             const s = document.createElement('div');
             s.className = 'star';
-            const size = Math.random() * 3 + 'px';
+            const size = (Math.random() * 2 + 1) + 'px';
             s.style.width = size; s.style.height = size;
             s.style.top = Math.random() * 100 + '%';
             s.style.left = Math.random() * 100 + '%';
-            s.style.setProperty('--speed', (Math.random() * 2 + 1) + 's');
+            s.style.setProperty('--speed', (Math.random() * 3 + 2) + 's');
             box.appendChild(s);
         }
     }
@@ -251,7 +268,7 @@
 
     function copyLink() {
         navigator.clipboard.writeText(document.getElementById('linkOutput').innerText);
-        alert("تم نسخ الرابط! أرسله لمن تحب 💖");
+        alert("تم نسخ الرابط بنجاح 💖");
     }
 
     window.onload = function() {
@@ -262,13 +279,11 @@
             document.getElementById('start-overlay').style.display = 'flex';
             document.getElementById('greetName').innerText = "إلى " + name;
             
-            // تعبئة الأسماء في المشاهد
             document.getElementById('finalName').innerText = name;
             document.getElementById('sceneName2').innerText = name;
             document.getElementById('moonName').innerText = name;
             document.getElementById('pulsingName').innerText = name;
 
-            createFlowers();
             createStars();
         }
     };
@@ -281,25 +296,31 @@
         audio.play();
 
         const screen = document.getElementById('view-screen');
-        const flowers = document.getElementById('flowerContainer');
+        
+        // تشغيل مطر الورد فوراً للمشهد الأول
+        startFlowerRain();
 
-        // مراقبة التمرير للتحكم في الورود
-        screen.onscroll = () => {
-            // إظهار الورود فقط في المشهد الأول (0 إلى ارتفاع الشاشة)
+        // مراقبة التمرير للتحكم في الورد
+        screen.addEventListener('scroll', () => {
+            const container = document.getElementById('flowerContainer');
             if (screen.scrollTop < window.innerHeight / 2) {
-                flowers.style.display = 'block';
+                if (container.style.display === 'none') {
+                    container.style.display = 'block';
+                    startFlowerRain();
+                }
             } else {
-                flowers.style.display = 'none';
+                container.style.display = 'none';
+                clearInterval(flowerInterval);
+                container.innerHTML = ''; // تنظيف الورود الموجودة
             }
-        };
-        flowers.style.display = 'block'; // تفعيلها للمشهد الأول عند البدء
+        });
 
         let current = 0;
         const sections = document.querySelectorAll('section');
         setInterval(() => {
             current = (current + 1) % sections.length;
             sections[current].scrollIntoView({ behavior: 'smooth' });
-        }, 7000);
+        }, 7500);
     }
 </script>
 </body>
