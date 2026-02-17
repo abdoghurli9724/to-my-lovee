@@ -25,35 +25,33 @@
             height: 100%;
         }
 
-        /* --- حاوية الورد المتساقط (تظهر في المشهد 3 فقط) --- */
+        /* --- حاويات الصور المتساقطة --- */
         #flowerContainer {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 5; overflow: hidden; display: none;
         }
         .falling-flower-img {
-            position: absolute;
-            width: 30px;
-            top: -50px;
+            position: absolute; width: 30px; top: -50px;
             filter: drop-shadow(0 0 5px rgba(248, 50, 146, 0.3));
             animation: fallAndFade linear forwards;
         }
 
-        /* --- حاوية الصور المتساقطة للمشهد الأول --- */
         #scene1-falling-container {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 1; overflow: hidden;
         }
+        /* تكبير صورة الخلفية في المشهد الأول */
         .falling-image-s1 {
             position: absolute;
-            top: -100px;
+            top: -150px;
             animation: fallAndFade linear forwards;
-            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.2));
-            opacity: 0.6;
+            filter: blur(1px) drop-shadow(0 0 10px rgba(255, 255, 255, 0.1));
+            opacity: 0.3; /* شفافية خفيفة لأنها كبيرة */
         }
 
         @keyframes fallAndFade {
             0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-            15% { opacity: 0.8; }
+            15% { opacity: var(--op, 0.6); }
             100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
         }
 
@@ -99,38 +97,31 @@
             z-index: 10; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5));
         }
 
-        /* التعديل المطلوب: تدرج أحمر على أبيض لاسم المشهد الأول فقط */
         .name-scene1 {
             background: linear-gradient(to bottom, #ff0000, #ffffff) !important;
             -webkit-background-clip: text !important;
             -webkit-text-fill-color: transparent !important;
         }
 
-        .scene2-img {
-            width: 320px; border-radius: 25px;
-            filter: drop-shadow(0 0 40px rgba(248, 50, 146, 0.6));
-            animation: floatAndPulse 3.5s infinite ease-in-out;
-            z-index: 10;
-        }
-
-        .scene3-img {
-            width: 280px;
-            filter: drop-shadow(0 0 30px rgba(255, 0, 0, 0.5));
+        /* صور المشاهد */
+        .scene-img {
+            width: 280px; border-radius: 20px;
+            filter: drop-shadow(0 0 30px var(--pink-glow));
             animation: floatAndPulse 3s infinite ease-in-out;
-            z-index: 10;
+            z-index: 10; margin-bottom: 20px;
         }
 
         @keyframes floatAndPulse {
             0%, 100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-20px) scale(1.05); }
+            50% { transform: translateY(-15px) scale(1.03); }
         }
 
-        .visualizer { display: flex; align-items: flex-end; gap: 8px; height: 120px; margin-bottom: 20px; }
+        .visualizer { display: flex; align-items: flex-end; gap: 8px; height: 80px; margin-top: 20px; }
         .bar {
-            width: 12px; background: linear-gradient(to top, var(--pink-accent), var(--gold));
-            border-radius: 6px; animation: wave 0.6s infinite alternate ease-in-out;
+            width: 8px; background: linear-gradient(to top, var(--pink-accent), var(--gold));
+            border-radius: 4px; animation: wave 0.6s infinite alternate ease-in-out;
         }
-        @keyframes wave { from { height: 20px; opacity: 0.5; } to { height: 120px; opacity: 1; } }
+        @keyframes wave { from { height: 10px; opacity: 0.5; } to { height: 80px; opacity: 1; } }
 
         .star { position: absolute; background: white; border-radius: 50%; animation: twinkle var(--speed) infinite ease-in-out; }
         @keyframes twinkle { 0%, 100% { opacity: 0.2; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.2); } }
@@ -175,27 +166,29 @@
     </section>
 
     <section id="scene2">
-        <img src="https://i.ibb.co/svDqxkxq/1000013084-removebg-preview.png" alt="حب" class="scene2-img">
-        <div class="big-name-text" id="sceneName2" style="font-size: 42px; margin-top: 20px;"></div>
+        <img src="https://i.ibb.co/svDqxkxq/1000013084-removebg-preview.png" alt="حب" class="scene-img">
+        <div class="big-name-text" id="sceneName2" style="font-size: 42px;"></div>
         <h2 style="font-family: 'Aref Ruqaa'; margin-top: 10px; z-index: 10;">بيحس بأمان معاك</h2>
     </section>
 
     <section id="scene3">
-        <img src="https://i.ibb.co/tpp5Q7jS/1000013068-removebg-preview-1.png" alt="باقة ورد" class="scene3-img">
-        <div class="big-name-text" id="sceneName3" style="font-size: 45px; margin-top: 20px;"></div>
+        <img src="https://i.ibb.co/tpp5Q7jS/1000013068-removebg-preview-1.png" alt="باقة ورد" class="scene-img">
+        <div class="big-name-text" id="sceneName3" style="font-size: 45px;"></div>
         <h2 style="font-family: 'Aref Ruqaa'; color: var(--gold); z-index: 10;">باقة حب لروحك</h2>
     </section>
 
     <section id="scene4">
         <div id="stars-scene4"></div>
-        <div class="visualizer" id="viz"></div>
+        <img src="https://i.ibb.co/svDqxkxq/1000013084-removebg-preview.png" class="scene-img" style="width: 200px; filter: drop-shadow(0 0 20px var(--gold));">
         <div class="big-name-text" id="sceneName4" style="font-size: 40px;"></div>
         <p style="font-family: 'Aref Ruqaa'; font-size: 22px;">أنت اللحن الذي يراقص قلبي</p>
+        <div class="visualizer" id="viz"></div>
     </section>
 
     <section id="scene5">
+        <img src="https://i.ibb.co/HfM50fbn/1000013078-removebg-preview.png" class="scene-img" style="width: 150px; opacity: 0.9;">
         <h2 class="big-name-text" style="font-size: 50px;">خليك معايا</h2>
-        <div style="margin-top: 50px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 25px;">
+        <div style="margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 20px;">
             <small style="opacity: 0.7;">بكل حب بواسطة</small><br>
             <strong style="color: var(--pink-accent); font-size: 24px;">عـبـدو غـرلي</strong>
         </div>
@@ -236,12 +229,13 @@
             img.src = scene1ImgUrl;
             img.className = 'falling-image-s1';
             img.style.left = Math.random() * 100 + 'vw';
-            const dur = Math.random() * 3 + 4;
+            const dur = Math.random() * 5 + 6; // أبطأ قليلاً لأنها كبيرة
             img.style.animationDuration = dur + 's';
-            img.style.width = Math.random() * 25 + 15 + 'px';
+            img.style.width = Math.random() * 100 + 100 + 'px'; // تكبير الحجم (100px إلى 200px)
+            img.style.setProperty('--op', '0.3');
             container.appendChild(img);
             setTimeout(() => img.remove(), dur * 1000);
-        }, 500);
+        }, 800);
     }
 
     function stopScene1Rain() {
@@ -331,17 +325,8 @@
             current = (current + 1) % sections.length;
             sections[current].scrollIntoView({ behavior: 'smooth' });
 
-            if (current === 0) {
-                startScene1Rain();
-            } else {
-                stopScene1Rain();
-            }
-
-            if (current === 2) {
-                startFlowerRain();
-            } else {
-                stopFlowerRain();
-            }
+            if (current === 0) startScene1Rain(); else stopScene1Rain();
+            if (current === 2) startFlowerRain(); else stopFlowerRain();
         }, 8000);
     }
 </script>
