@@ -12,6 +12,7 @@
             --bg-dark: #05060a;
             --pink-accent: #f83292;
             --pink-glow: rgba(248, 50, 146, 0.6);
+            --white-glow: rgba(255, 255, 255, 0.8);
             --gold: #ffcc00;
         }
 
@@ -24,22 +25,35 @@
             height: 100%;
         }
 
-        /* --- تعديل تساقط الصور بدلاً من الايموجي --- */
+        /* --- حاوية الورد المتساقط (تظهر في المشهد 3 فقط) --- */
         #flowerContainer {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 1; overflow: hidden; display: none;
+            pointer-events: none; z-index: 5; overflow: hidden; display: none;
         }
         .falling-flower-img {
             position: absolute;
-            width: 30px; /* حجم الوردة المتساقطة */
-            height: auto;
+            width: 30px;
             top: -50px;
             filter: drop-shadow(0 0 5px rgba(248, 50, 146, 0.3));
             animation: fallAndFade linear forwards;
         }
+
+        /* --- حاوية الصور المتساقطة للمشهد الأول --- */
+        #scene1-falling-container {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 1; overflow: hidden;
+        }
+        .falling-image-s1 {
+            position: absolute;
+            top: -100px;
+            animation: fallAndFade linear forwards;
+            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.2));
+            opacity: 0.6;
+        }
+
         @keyframes fallAndFade {
             0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-            10% { opacity: 0.8; }
+            15% { opacity: 0.8; }
             100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
         }
 
@@ -85,15 +99,13 @@
             z-index: 10; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5));
         }
 
-        /* المشهد 2: صورة كبيرة وتوهج أبيض */
         .scene2-img {
-            width: 380px;
-            filter: drop-shadow(0 0 50px rgba(255, 255, 255, 0.9));
+            width: 320px; border-radius: 25px;
+            filter: drop-shadow(0 0 40px rgba(248, 50, 146, 0.6));
             animation: floatAndPulse 3.5s infinite ease-in-out;
             z-index: 10;
         }
 
-        /* المشهد 3: باقة الورد */
         .scene3-img {
             width: 280px;
             filter: drop-shadow(0 0 30px rgba(255, 0, 0, 0.5));
@@ -106,10 +118,7 @@
             50% { transform: translateY(-20px) scale(1.05); }
         }
 
-        /* المشهد 4: النغمة الموسيقية */
-        .visualizer {
-            display: flex; align-items: flex-end; gap: 8px; height: 120px; margin-bottom: 20px;
-        }
+        .visualizer { display: flex; align-items: flex-end; gap: 8px; height: 120px; margin-bottom: 20px; }
         .bar {
             width: 12px; background: linear-gradient(to top, var(--pink-accent), var(--gold));
             border-radius: 6px; animation: wave 0.6s infinite alternate ease-in-out;
@@ -153,13 +162,14 @@
 
 <div id="view-screen">
     <section id="scene1">
+        <div id="scene1-falling-container"></div>
+        
         <div class="big-name-text" id="finalName"></div>
-        <p style="color: var(--gold); font-family: 'Aref Ruqaa'; font-size: 28px; margin-top: 10px;">يا حلم عمري...</p>
+        <p style="color: var(--gold); font-family: 'Aref Ruqaa'; font-size: 28px; margin-top: 10px; position: relative; z-index: 10;">يا حلم عمري...</p>
     </section>
 
     <section id="scene2">
-        <div id="stars-scene2"></div>
-        <img src="https://i.ibb.co/MkGDmtYC/1000013072-removebg-preview.png" alt="صورة خاصة" class="scene2-img">
+        <img src="https://i.ibb.co/svDqxkxq/1000013084-removebg-preview.png" alt="حب" class="scene2-img">
         <div class="big-name-text" id="sceneName2" style="font-size: 42px; margin-top: 20px;"></div>
         <h2 style="font-family: 'Aref Ruqaa'; margin-top: 10px; z-index: 10;">بيحس بأمان معاك</h2>
     </section>
@@ -167,7 +177,7 @@
     <section id="scene3">
         <img src="https://i.ibb.co/tpp5Q7jS/1000013068-removebg-preview-1.png" alt="باقة ورد" class="scene3-img">
         <div class="big-name-text" id="sceneName3" style="font-size: 45px; margin-top: 20px;"></div>
-        <h2 style="font-family: 'Aref Ruqaa'; color: var(--gold);">باقة حب لروحك</h2>
+        <h2 style="font-family: 'Aref Ruqaa'; color: var(--gold); z-index: 10;">باقة حب لروحك</h2>
     </section>
 
     <section id="scene4">
@@ -190,14 +200,16 @@
 
 <script>
     const songUrl = "https://f.top4top.io/m_3699yquuk0.mp3";
-    // رابط صورة الوردة التي ستتساقط
-    const fallingRoseUrl = "https://i.ibb.co/HfM50fbn/1000013078-removebg-preview.png"; 
+    const fallingRoseUrl = "https://i.ibb.co/HfM50fbn/1000013078-removebg-preview.png"; // صورة الورد
+    const scene1ImgUrl = "https://i.ibb.co/HfM50fbn/1000013078-removebg-preview.png"; // الصورة المتساقطة للمشهد الأول (يمكنك تغييرها)
 
-    let flowerInterval;
+    let flowerInterval = null;
+    let scene1Interval = null;
 
     function createStars(containerId) {
         const container = document.getElementById(containerId);
         if(!container) return;
+        container.innerHTML = '';
         for(let i=0; i<45; i++) {
             const s = document.createElement('div');
             s.className = 'star';
@@ -210,8 +222,32 @@
         }
     }
 
-    // --- الوظيفة المعدلة لتساقط الصور ---
+    // تساقط المشهد الأول
+    function startScene1Rain() {
+        if (scene1Interval) return;
+        const container = document.getElementById('scene1-falling-container');
+        scene1Interval = setInterval(() => {
+            const img = document.createElement('img');
+            img.src = scene1ImgUrl;
+            img.className = 'falling-image-s1';
+            img.style.left = Math.random() * 100 + 'vw';
+            const dur = Math.random() * 3 + 4;
+            img.style.animationDuration = dur + 's';
+            img.style.width = Math.random() * 25 + 15 + 'px';
+            container.appendChild(img);
+            setTimeout(() => img.remove(), dur * 1000);
+        }, 500);
+    }
+
+    function stopScene1Rain() {
+        clearInterval(scene1Interval);
+        scene1Interval = null;
+        document.getElementById('scene1-falling-container').innerHTML = '';
+    }
+
+    // تساقط المشهد الثالث (الورد)
     function startFlowerRain() {
+        if (flowerInterval) return;
         const container = document.getElementById('flowerContainer');
         container.style.display = 'block';
         flowerInterval = setInterval(() => {
@@ -221,13 +257,18 @@
             img.style.left = Math.random() * 100 + 'vw';
             const dur = Math.random() * 3 + 4;
             img.style.animationDuration = dur + 's';
-            // جعل الاحجام متفاوتة قليلاً للواقعية
-            const size = Math.random() * 20 + 20 + 'px';
-            img.style.width = size;
-
+            img.style.width = Math.random() * 20 + 20 + 'px';
             container.appendChild(img);
             setTimeout(() => img.remove(), dur * 1000);
-        }, 600);
+        }, 400);
+    }
+
+    function stopFlowerRain() {
+        const container = document.getElementById('flowerContainer');
+        container.style.display = 'none';
+        clearInterval(flowerInterval);
+        flowerInterval = null;
+        container.innerHTML = '';
     }
 
     function generateLink() {
@@ -257,7 +298,6 @@
             document.getElementById('sceneName3').innerText = name;
             document.getElementById('sceneName4').innerText = name;
 
-            createStars('stars-scene2');
             createStars('stars-scene4');
 
             const viz = document.getElementById('viz');
@@ -272,17 +312,34 @@
 
     function initExperience() {
         document.getElementById('start-overlay').style.display = 'none';
-        document.getElementById('view-screen').style.display = 'block';
+        const viewScreen = document.getElementById('view-screen');
+        viewScreen.style.display = 'block';
         const audio = document.getElementById('player');
         audio.src = songUrl;
         audio.play();
-        startFlowerRain();
 
-        let current = 0;
         const sections = document.querySelectorAll('section');
+        let current = 0;
+
+        // تشغيل تأثير المشهد الأول فوراً
+        startScene1Rain();
+
         setInterval(() => {
             current = (current + 1) % sections.length;
             sections[current].scrollIntoView({ behavior: 'smooth' });
+
+            // التحكم في التأثيرات حسب المشهد الحالي
+            if (current === 0) {
+                startScene1Rain();
+            } else {
+                stopScene1Rain();
+            }
+
+            if (current === 2) {
+                startFlowerRain();
+            } else {
+                stopFlowerRain();
+            }
         }, 8000);
     }
 </script>
