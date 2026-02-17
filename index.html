@@ -99,6 +99,13 @@
             z-index: 10; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5));
         }
 
+        /* التعديل المطلوب: تدرج أحمر على أبيض لاسم المشهد الأول فقط */
+        .name-scene1 {
+            background: linear-gradient(to bottom, #ff0000, #ffffff) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+        }
+
         .scene2-img {
             width: 320px; border-radius: 25px;
             filter: drop-shadow(0 0 40px rgba(248, 50, 146, 0.6));
@@ -163,8 +170,7 @@
 <div id="view-screen">
     <section id="scene1">
         <div id="scene1-falling-container"></div>
-        
-        <div class="big-name-text" id="finalName"></div>
+        <div class="big-name-text name-scene1" id="finalName"></div>
         <p style="color: var(--gold); font-family: 'Aref Ruqaa'; font-size: 28px; margin-top: 10px; position: relative; z-index: 10;">يا حلم عمري...</p>
     </section>
 
@@ -200,8 +206,8 @@
 
 <script>
     const songUrl = "https://f.top4top.io/m_3699yquuk0.mp3";
-    const fallingRoseUrl = "https://i.ibb.co/HfM50fbn/1000013078-removebg-preview.png"; // صورة الورد
-    const scene1ImgUrl = "https://i.ibb.co/HfM50fbn/1000013078-removebg-preview.png"; // الصورة المتساقطة للمشهد الأول (يمكنك تغييرها)
+    const fallingRoseUrl = "https://i.ibb.co/HfM50fbn/1000013078-removebg-preview.png"; 
+    const scene1ImgUrl = "https://i.ibb.co/QjkbFpcj/1000013087-removebg-preview.png"; 
 
     let flowerInterval = null;
     let scene1Interval = null;
@@ -222,7 +228,6 @@
         }
     }
 
-    // تساقط المشهد الأول
     function startScene1Rain() {
         if (scene1Interval) return;
         const container = document.getElementById('scene1-falling-container');
@@ -245,7 +250,6 @@
         document.getElementById('scene1-falling-container').innerHTML = '';
     }
 
-    // تساقط المشهد الثالث (الورد)
     function startFlowerRain() {
         if (flowerInterval) return;
         const container = document.getElementById('flowerContainer');
@@ -321,14 +325,12 @@
         const sections = document.querySelectorAll('section');
         let current = 0;
 
-        // تشغيل تأثير المشهد الأول فوراً
         startScene1Rain();
 
         setInterval(() => {
             current = (current + 1) % sections.length;
             sections[current].scrollIntoView({ behavior: 'smooth' });
 
-            // التحكم في التأثيرات حسب المشهد الحالي
             if (current === 0) {
                 startScene1Rain();
             } else {
