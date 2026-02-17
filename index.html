@@ -24,13 +24,17 @@
             height: 100%;
         }
 
-        /* --- تساقط الورود --- */
+        /* --- تعديل تساقط الصور بدلاً من الايموجي --- */
         #flowerContainer {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 1; overflow: hidden; display: none;
         }
-        .flower {
-            position: absolute; color: #ffb7d5; font-size: 22px; top: -50px;
+        .falling-flower-img {
+            position: absolute;
+            width: 30px; /* حجم الوردة المتساقطة */
+            height: auto;
+            top: -50px;
+            filter: drop-shadow(0 0 5px rgba(248, 50, 146, 0.3));
             animation: fallAndFade linear forwards;
         }
         @keyframes fallAndFade {
@@ -81,19 +85,15 @@
             z-index: 10; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5));
         }
 
-        /* --- النجوم --- */
-        .star { position: absolute; background: white; border-radius: 50%; animation: twinkle var(--speed) infinite ease-in-out; }
-        @keyframes twinkle { 0%, 100% { opacity: 0.2; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.2); } }
-
-        /* --- المشهد الثاني: صورة كبيرة وتوهج أبيض --- */
+        /* المشهد 2: صورة كبيرة وتوهج أبيض */
         .scene2-img {
-            width: 380px; /* الحجم الكبير */
-            filter: drop-shadow(0 0 50px rgba(255, 255, 255, 0.9)); /* توهج أبيض ناصع */
+            width: 380px;
+            filter: drop-shadow(0 0 50px rgba(255, 255, 255, 0.9));
             animation: floatAndPulse 3.5s infinite ease-in-out;
             z-index: 10;
         }
 
-        /* --- المشهد الثالث: باقة الورد --- */
+        /* المشهد 3: باقة الورد */
         .scene3-img {
             width: 280px;
             filter: drop-shadow(0 0 30px rgba(255, 0, 0, 0.5));
@@ -115,6 +115,9 @@
             border-radius: 6px; animation: wave 0.6s infinite alternate ease-in-out;
         }
         @keyframes wave { from { height: 20px; opacity: 0.5; } to { height: 120px; opacity: 1; } }
+
+        .star { position: absolute; background: white; border-radius: 50%; animation: twinkle var(--speed) infinite ease-in-out; }
+        @keyframes twinkle { 0%, 100% { opacity: 0.2; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.2); } }
 
         #start-overlay {
             position: fixed; top:0; left:0; width:100%; height:100%; background: var(--bg-dark);
@@ -187,6 +190,9 @@
 
 <script>
     const songUrl = "https://f.top4top.io/m_3699yquuk0.mp3";
+    // رابط صورة الوردة التي ستتساقط
+    const fallingRoseUrl = "https://i.ibb.co/HfM50fbn/1000013078-removebg-preview.png"; 
+
     let flowerInterval;
 
     function createStars(containerId) {
@@ -202,6 +208,26 @@
             s.style.setProperty('--speed', (Math.random() * 3 + 2) + 's');
             container.appendChild(s);
         }
+    }
+
+    // --- الوظيفة المعدلة لتساقط الصور ---
+    function startFlowerRain() {
+        const container = document.getElementById('flowerContainer');
+        container.style.display = 'block';
+        flowerInterval = setInterval(() => {
+            const img = document.createElement('img');
+            img.src = fallingRoseUrl;
+            img.className = 'falling-flower-img';
+            img.style.left = Math.random() * 100 + 'vw';
+            const dur = Math.random() * 3 + 4;
+            img.style.animationDuration = dur + 's';
+            // جعل الاحجام متفاوتة قليلاً للواقعية
+            const size = Math.random() * 20 + 20 + 'px';
+            img.style.width = size;
+
+            container.appendChild(img);
+            setTimeout(() => img.remove(), dur * 1000);
+        }, 600);
     }
 
     function generateLink() {
@@ -243,21 +269,6 @@
             }
         }
     };
-
-    function startFlowerRain() {
-        const container = document.getElementById('flowerContainer');
-        container.style.display = 'block';
-        flowerInterval = setInterval(() => {
-            const f = document.createElement('div');
-            f.className = 'flower';
-            f.innerHTML = '🌹';
-            f.style.left = Math.random() * 100 + 'vw';
-            const dur = Math.random() * 3 + 4;
-            f.style.animationDuration = dur + 's';
-            container.appendChild(f);
-            setTimeout(() => f.remove(), dur * 1000);
-        }, 500);
-    }
 
     function initExperience() {
         document.getElementById('start-overlay').style.display = 'none';
