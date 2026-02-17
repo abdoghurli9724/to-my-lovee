@@ -12,7 +12,7 @@
             --bg-dark: #05060a;
             --pink-accent: #f83292;
             --pink-glow: rgba(248, 50, 146, 0.6);
-            --red-glow: rgba(255, 0, 0, 0.7); 
+            --white-glow: rgba(255, 255, 255, 0.8);
             --gold: #ffcc00;
         }
 
@@ -25,32 +25,21 @@
             height: 100%;
         }
 
-        /* حاويات الصور المتساقطة */
+        /* حاوية الورد المتساقط */
         #flowerContainer {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 5; overflow: hidden; display: none;
         }
         .falling-flower-img {
-            position: absolute; width: 30px; top: -50px;
-            filter: drop-shadow(0 0 5px rgba(255, 0, 0, 0.5));
-            animation: fallAndFade linear forwards;
-        }
-
-        #scene1-falling-container {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 1; overflow: hidden;
-        }
-        .falling-image-s1 {
             position: absolute;
-            top: -100px;
+            width: 30px;
+            top: -50px;
+            filter: drop-shadow(0 0 5px rgba(248, 50, 146, 0.3));
             animation: fallAndFade linear forwards;
-            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.2));
-            opacity: 0.4;
         }
-
         @keyframes fallAndFade {
             0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-            15% { opacity: var(--op, 0.6); }
+            10% { opacity: 0.8; }
             100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
         }
 
@@ -89,37 +78,44 @@
             scroll-snap-align: start; text-align: center; overflow: hidden;
         }
 
-        /* تعديل تدرج النص: أبيض من الأعلى وزهري من الأسفل */
         .big-name-text {
             font-family: 'Aref Ruqaa', serif; font-size: 60px;
-            background: linear-gradient(to bottom, #ffffff 30%, var(--pink-accent) 100%);
+            background: linear-gradient(to bottom, #fff, var(--pink-accent));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             z-index: 10; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5));
         }
 
-        /* صور المشاهد */
-        .scene-img {
-            width: 280px; border-radius: 20px;
-            filter: drop-shadow(0 0 30px var(--pink-glow));
-            animation: floatAndPulse 3s infinite ease-in-out;
-            z-index: 10; margin-bottom: 20px;
+        .scene2-img {
+            width: 320px; 
+            border-radius: 25px;
+            filter: drop-shadow(0 0 40px rgba(248, 50, 146, 0.6));
+            animation: floatAndPulse 3.5s infinite ease-in-out;
+            z-index: 10;
         }
 
-        .red-glow-img {
-            filter: drop-shadow(0 0 40px var(--red-glow)) !important;
+        .scene3-img {
+            width: 280px;
+            filter: drop-shadow(0 0 30px rgba(255, 0, 0, 0.5));
+            animation: floatAndPulse 3s infinite ease-in-out;
+            z-index: 10;
         }
 
         @keyframes floatAndPulse {
             0%, 100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-15px) scale(1.03); }
+            50% { transform: translateY(-20px) scale(1.05); }
         }
 
-        .visualizer { display: flex; align-items: flex-end; gap: 8px; height: 60px; margin-top: 15px; }
-        .bar {
-            width: 6px; background: linear-gradient(to top, var(--pink-accent), var(--gold));
-            border-radius: 3px; animation: wave 0.6s infinite alternate ease-in-out;
+        .visualizer {
+            display: flex; align-items: flex-end; gap: 8px; height: 120px; margin-bottom: 20px;
         }
-        @keyframes wave { from { height: 10px; opacity: 0.5; } to { height: 60px; opacity: 1; } }
+        .bar {
+            width: 12px; background: linear-gradient(to top, var(--pink-accent), var(--gold));
+            border-radius: 6px; animation: wave 0.6s infinite alternate ease-in-out;
+        }
+        @keyframes wave { from { height: 20px; opacity: 0.5; } to { height: 120px; opacity: 1; } }
+
+        .star { position: absolute; background: white; border-radius: 50%; animation: twinkle var(--speed) infinite ease-in-out; }
+        @keyframes twinkle { 0%, 100% { opacity: 0.2; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.2); } }
 
         #start-overlay {
             position: fixed; top:0; left:0; width:100%; height:100%; background: var(--bg-dark);
@@ -155,35 +151,32 @@
 
 <div id="view-screen">
     <section id="scene1">
-        <div id="scene1-falling-container"></div>
-        <img src="https://i.ibb.co/bqhbPgC/1000013105-removebg-preview.png" alt="بداية" class="scene-img">
         <div class="big-name-text" id="finalName"></div>
-        <p style="color: var(--gold); font-family: 'Aref Ruqaa'; font-size: 28px; margin-top: 10px; position: relative; z-index: 10;">اتيت وكأنك روحاً لروحي</p>
+        <p style="color: var(--gold); font-family: 'Aref Ruqaa'; font-size: 28px; margin-top: 10px;">يا حلم عمري...</p>
     </section>
 
     <section id="scene2">
-        <img src="https://i.ibb.co/svDqxkxq/1000013084-removebg-preview.png" alt="حب" class="scene-img">
-        <div class="big-name-text" id="sceneName2" style="font-size: 42px;"></div>
-        <h2 style="font-family: 'Aref Ruqaa'; margin-top: 10px; z-index: 10;">أحببت قمراً</h2>
+        <img src="https://i.ibb.co/svDqxkxq/1000013084-removebg-preview.png" alt="حب" class="scene2-img">
+        <div class="big-name-text" id="sceneName2" style="font-size: 42px; margin-top: 20px;"></div>
+        <h2 style="font-family: 'Aref Ruqaa'; margin-top: 10px; z-index: 10;">بيحس بأمان معاك</h2>
     </section>
 
     <section id="scene3">
-        <img src="https://i.ibb.co/tpp5Q7jS/1000013068-removebg-preview-1.png" alt="باقة ورد" class="scene-img red-glow-img">
-        <div class="big-name-text" id="sceneName3" style="font-size: 45px;"></div>
-        <h2 style="font-family: 'Aref Ruqaa'; color: var(--gold); z-index: 10;">بين تفاصيل ملامحك يسكن الورد</h2>
+        <img src="https://i.ibb.co/tpp5Q7jS/1000013068-removebg-preview-1.png" alt="باقة ورد" class="scene3-img">
+        <div class="big-name-text" id="sceneName3" style="font-size: 45px; margin-top: 20px;"></div>
+        <h2 style="font-family: 'Aref Ruqaa'; color: var(--gold);">باقة حب لروحك</h2>
     </section>
 
     <section id="scene4">
-        <img src="https://i.ibb.co/8DbyspMR/1000013098-removebg-preview.png" class="scene-img" style="width: 340px; filter: drop-shadow(0 0 35px var(--pink-accent));">
-        <div class="big-name-text" id="sceneName4" style="font-size: 40px;"></div>
-        <p style="font-family: 'Aref Ruqaa'; font-size: 22px;">دمت لي شيئاً جميلاً لاينتهي</p>
+        <div id="stars-scene4"></div>
         <div class="visualizer" id="viz"></div>
+        <div class="big-name-text" id="sceneName4" style="font-size: 40px;"></div>
+        <p style="font-family: 'Aref Ruqaa'; font-size: 22px;">أنت اللحن الذي يراقص قلبي</p>
     </section>
 
     <section id="scene5">
-        <img src="https://i.ibb.co/kV12X5rr/1000013099-removebg-preview.png" class="scene-img" style="width: 150px; opacity: 0.9;">
-        <h2 class="big-name-text" style="font-size: 50px;">بحبك حلوتي</h2>
-        <div style="margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 20px;">
+        <h2 class="big-name-text" style="font-size: 50px;">خليك معايا</h2>
+        <div style="margin-top: 50px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 25px;">
             <small style="opacity: 0.7;">بكل حب بواسطة</small><br>
             <strong style="color: var(--pink-accent); font-size: 24px;">عـبـدو غـرلي</strong>
         </div>
@@ -195,32 +188,23 @@
 <script>
     const songUrl = "https://f.top4top.io/m_3699yquuk0.mp3";
     const fallingRoseUrl = "https://i.ibb.co/HfM50fbn/1000013078-removebg-preview.png"; 
-    const scene1ImgUrl = "https://i.ibb.co/HfM50fbn/10013078-removebg-preview.png"; 
 
     let flowerInterval = null;
-    let scene1Interval = null;
 
-    function startScene1Rain() {
-        if (scene1Interval) return;
-        const container = document.getElementById('scene1-falling-container');
-        scene1Interval = setInterval(() => {
-            const img = document.createElement('img');
-            img.src = scene1ImgUrl;
-            img.className = 'falling-image-s1';
-            img.style.left = Math.random() * 100 + 'vw';
-            const dur = Math.random() * 4 + 5;
-            img.style.animationDuration = dur + 's';
-            img.style.width = Math.random() * 40 + 50 + 'px';
-            img.style.setProperty('--op', '0.4');
-            container.appendChild(img);
-            setTimeout(() => img.remove(), dur * 1000);
-        }, 600);
-    }
-
-    function stopScene1Rain() {
-        clearInterval(scene1Interval);
-        scene1Interval = null;
-        document.getElementById('scene1-falling-container').innerHTML = '';
+    function createStars(containerId) {
+        const container = document.getElementById(containerId);
+        if(!container) return;
+        container.innerHTML = '';
+        for(let i=0; i<45; i++) {
+            const s = document.createElement('div');
+            s.className = 'star';
+            const size = (Math.random() * 2 + 1) + 'px';
+            s.style.width = size; s.style.height = size;
+            s.style.top = Math.random() * 100 + '%';
+            s.style.left = Math.random() * 100 + '%';
+            s.style.setProperty('--speed', (Math.random() * 3 + 2) + 's');
+            container.appendChild(s);
+        }
     }
 
     function startFlowerRain() {
@@ -275,6 +259,8 @@
             document.getElementById('sceneName3').innerText = name;
             document.getElementById('sceneName4').innerText = name;
 
+            createStars('stars-scene4');
+
             const viz = document.getElementById('viz');
             for(let i=0; i<12; i++) {
                 const bar = document.createElement('div');
@@ -296,14 +282,25 @@
         const sections = document.querySelectorAll('section');
         let current = 0;
 
-        startScene1Rain();
+        // التأكد من إيقاف الورد عند البدء في المشهد الأول
+        stopFlowerRain();
 
         setInterval(() => {
             current = (current + 1) % sections.length;
             sections[current].scrollIntoView({ behavior: 'smooth' });
 
-            if (current === 0) startScene1Rain(); else stopScene1Rain();
-            if (current === 2) startFlowerRain(); else stopFlowerRain();
+            // الشرط: إذا كان المشهد هو الأول (0)، تأكد من عدم وجود ورد
+            if (current === 0) {
+                stopFlowerRain();
+            } 
+            // إذا كان المشهد هو الثالث (2)، قم بتشغيل الورد
+            else if (current === 2) {
+                startFlowerRain();
+            } 
+            // لبقية المشاهد، يمكنك اختيار إبقاء الورد أو حذفه (هنا قمت بحذفه ليكون مميزاً في الثالث فقط)
+            else {
+                stopFlowerRain();
+            }
         }, 8000);
     }
 </script>
