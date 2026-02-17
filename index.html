@@ -85,13 +85,22 @@
         .star { position: absolute; background: white; border-radius: 50%; animation: twinkle var(--speed) infinite ease-in-out; }
         @keyframes twinkle { 0%, 100% { opacity: 0.2; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.2); } }
 
-        /* --- المشهد 2 و 3: تأثير الصور النابضة --- */
-        .pulse-img {
+        /* --- المشهد الثاني: صورة كبيرة وتوهج أبيض --- */
+        .scene2-img {
+            width: 380px; /* الحجم الكبير */
+            filter: drop-shadow(0 0 50px rgba(255, 255, 255, 0.9)); /* توهج أبيض ناصع */
+            animation: floatAndPulse 3.5s infinite ease-in-out;
+            z-index: 10;
+        }
+
+        /* --- المشهد الثالث: باقة الورد --- */
+        .scene3-img {
             width: 280px;
-            filter: drop-shadow(0 0 30px var(--pink-glow));
+            filter: drop-shadow(0 0 30px rgba(255, 0, 0, 0.5));
             animation: floatAndPulse 3s infinite ease-in-out;
             z-index: 10;
         }
+
         @keyframes floatAndPulse {
             0%, 100% { transform: translateY(0) scale(1); }
             50% { transform: translateY(-20px) scale(1.05); }
@@ -146,20 +155,20 @@
     </section>
 
     <section id="scene2">
-        <div class="stars-container" id="stars-scene2"></div>
-        <img src="https://i.ibb.co/MkGDmtYC/1000013072-removebg-preview.png" alt="صورة خاصة" class="pulse-img">
+        <div id="stars-scene2"></div>
+        <img src="رابط_صورتك_هنا.png" alt="صورة خاصة" class="scene2-img">
         <div class="big-name-text" id="sceneName2" style="font-size: 42px; margin-top: 20px;"></div>
         <h2 style="font-family: 'Aref Ruqaa'; margin-top: 10px; z-index: 10;">بيحس بأمان معاك</h2>
     </section>
 
     <section id="scene3">
-        <img src="https://i.ibb.co/LzN8M9S/red-roses-bouquet.png" alt="باقة ورد" class="pulse-img">
+        <img src="https://i.ibb.co/LzN8M9S/red-roses-bouquet.png" alt="باقة ورد" class="scene3-img">
         <div class="big-name-text" id="sceneName3" style="font-size: 45px; margin-top: 20px;"></div>
         <h2 style="font-family: 'Aref Ruqaa'; color: var(--gold);">باقة حب لروحك</h2>
     </section>
 
     <section id="scene4">
-        <div class="stars-container" id="stars-scene4"></div>
+        <div id="stars-scene4"></div>
         <div class="visualizer" id="viz"></div>
         <div class="big-name-text" id="sceneName4" style="font-size: 40px;"></div>
         <p style="font-family: 'Aref Ruqaa'; font-size: 22px;">أنت اللحن الذي يراقص قلبي</p>
@@ -182,7 +191,8 @@
 
     function createStars(containerId) {
         const container = document.getElementById(containerId);
-        for(let i=0; i<40; i++) {
+        if(!container) return;
+        for(let i=0; i<45; i++) {
             const s = document.createElement('div');
             s.className = 'star';
             const size = (Math.random() * 2 + 1) + 'px';
